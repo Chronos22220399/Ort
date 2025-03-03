@@ -1,0 +1,29 @@
+# 基于 Allman/BSD 风格
+BasedOnStyle: LLVM
+BreakBeforeBraces: Allman
+IndentWidth: 4
+ContinuationIndentWidth: 4
+UseTab: Never
+
+# 增强适配参数
+AccessModifierOffset: -4     # 访问修饰符缩进对齐类名
+AllowShortBlocksOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+BraceWrapping:
+  AfterClass:      true      # class 后换行
+  AfterControlStatement: true # if/while 后换行
+  AfterFunction:   true      # 函数定义后换行
+  AfterNamespace:  true      # namespace 后换行
+  AfterStruct:     true      # struct 后换行
+  AfterUnion:      true      # union 后换行
+  BeforeCatch:     true      # catch 前换行
+  BeforeElse:      true      # else 前换行
+  SplitEmptyFunction: false
+
+# 其他关键参数
+AlignAfterOpenBracket: Align  # 括号内对齐
+AlignConsecutiveDeclarations: true  # 连续变量声明对齐
+ColumnLimit: 120              # 行宽限制
+PointerAlignment: Left        # 指针符号左对齐
+SpaceBeforeCpp11BracedList: true
+SpaceInEmptyParentheses: false

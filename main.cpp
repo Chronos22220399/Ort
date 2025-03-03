@@ -1,23 +1,42 @@
-#include <filesystem>
+#include <fstream>
 #include <iostream>
-#include <token/token.h>
 #include <lexer/lexer.h>
+#include <nlohmann/json.hpp>
+#include <token/token.h>
 
-int main()
+std::string handle(int argc, char* argv[])
 {
-    // Ort::token::Token token {};
-    // std::cout<<token.name()<<std::endl;
-    using namespace Ort::token;
+    using namespace std;
+    if (argc != 2)
+    {
+        cout << "Usage: Ort <filename>" << endl;
+    }
 
-    Ort::lexer::Lexer lexer {"/Users/wuming/ClionProjects/Ort/code.ess"};
+    return {argv[1]};
+}
+
+int main(int argc, char* argv[])
+{
+    using namespace Ort::token;
+    using namespace nlohmann;
+    auto filename = handle(argc, argv);
+    json tokens;
+
+    Ort::lexer::Lexer lexer {filename};
     while (true)
     {
         auto token = lexer.next_token();
-        token.show();
+        tokens.push_back(token.json());
         if (token.type() == Token::TOKEN_EOF)
         {
             break;
         }
     }
+    json j;
+    j["tokens"] = tokens;
+
+    std::ofstream ofs("./token.json");
+    ofs << j.dump();
+    ofs.close();
     return 0;
 }
