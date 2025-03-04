@@ -50,6 +50,8 @@ private:
     Token                             m_peek;
     std::list<std::string>            m_errors;
     static std::map<Token::Type, int> m_precedences;
+    static std::map<Token::Type, prefix_parse_fn> m_prefix_parse_fns;
+    static std::map<Token::Type, infix_parse_fn> m_infix_parse_fns;
 };
 
 } // namespace parser

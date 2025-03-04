@@ -23,11 +23,6 @@ Lexer::Lexer(const std::string& file) : m_ch(0), m_pos(0), m_next_pos(0)
     m_input = oss.str();
 }
 
-const std::string& Lexer::input()
-{
-    return m_input;
-}
-
 Token Lexer::next_token()
 {
     read_char();
@@ -38,41 +33,95 @@ Token Lexer::next_token()
     {
         std::string literal;
         literal += m_ch;
-        return new_token(Token::TOKEN_PLUS, literal);
+        return new_token(Token::Type::TOKEN_PLUS, literal);
     }
     case '-':
     {
         std::string literal;
         literal += m_ch;
-        return new_token(Token::TOKEN_MINUS, literal);
+        return new_token(Token::Type::TOKEN_MINUS, literal);
     }
     case '*':
     {
         std::string literal;
         literal += m_ch;
-        return new_token(Token::TOKEN_ASTERISK, literal);
+        return new_token(Token::Type::TOKEN_ASTERISK, literal);
     }
     case '/':
     {
         std::string literal;
         literal += m_ch;
-        return new_token(Token::TOKEN_SLASH, literal);
+        return new_token(Token::Type::TOKEN_SLASH, literal);
     }
     case '(':
     {
         std::string literal;
         literal += m_ch;
-        return new_token(Token::TOKEN_LPAREN, literal);
+        return new_token(Token::Type::TOKEN_LPAREN, literal);
     }
     case ')':
     {
         std::string literal;
         literal += m_ch;
-        return new_token(Token::TOKEN_RPAREN, literal);
+        return new_token(Token::Type::TOKEN_RPAREN, literal);
+    }
+    case ':':
+    {
+        std::string literal;
+        literal += m_ch;
+        return new_token(Token::Type::TOKEN_COLON, literal);
+    }
+    case ';':
+    {
+        std::string literal;
+        literal += m_ch;
+        return new_token(Token::Type::TOKEN_SEMICOLON, literal);
+    }
+    case '=':
+    {
+        std::string literal;
+        literal += m_ch;
+        if (m_input[m_next_pos] == '=')
+        {
+            read_char();
+            literal += m_ch;
+            return new_token(Token::Type::TOKEN_EQUALEQUAL, literal);
+        }
+        return new_token(Token::Type::TOKEN_EQUAL, literal);
+    }
+    case '<':
+    {
+        std::string literal;
+        literal += m_ch;
+        if (m_input[m_next_pos] == '=')
+        {
+            read_char();
+            literal += m_ch;
+            return new_token(Token::Type::TOKEN_LESSEQUAL, literal);
+        }
+        return new_token(Token::Type::TOKEN_LESS, literal);
+    }
+    case '>':
+    {
+        std::string literal;
+        literal += m_ch;
+        if (m_input[m_next_pos] == '=')
+        {
+            read_char();
+            literal += m_ch;
+            return new_token(Token::Type::TOKEN_GREATEEQUAL, literal);
+        }
+        return new_token(Token::Type::TOKEN_GREATE, literal);
+    }
+    case '#':
+    {
+        std::string literal;
+        literal += m_ch;
+        return new_token(Token::Type::TOKEN_COMMA, literal);
     }
     case 0:
     {
-        return new_token(Token::TOKEN_EOF, "");
+        return new_token(Token::Type::TOKEN_EOF, "");
     }
     default:
     {
@@ -80,13 +129,50 @@ Token Lexer::next_token()
         {
             std::string integer = read_number();
             unread_char(); // 让 m_ch 停留于数字尾部
-            return new_token(Token::TOKEN_INTEGER, integer);
+            return new_token(Token::Type::TOKEN_DIGIT, integer);
+        }
+        else if (is_alpha(m_ch))
+        {
+            std::string literal;
+            if (is_begin(m_ch))
+            {
+                literal += read_begin();
+                return new_token(Token::Type::TOKEN_BEGIN, literal);
+            }
+            else if (is_do(m_ch))
+            {
+                literal += read_do();
+                return new_token(Token::Type::TOKEN_DO, literal);
+            }
+            else if (is_end(m_ch))
+            {
+                literal += read_end();
+                return new_token(Token::Type::TOKEN_END, literal);
+            }
+            else if (is_then(m_ch))
+            {
+                literal += read_then();
+                return new_token(Token::Type::TOKEN_THEN, literal);
+            }
+            else if (is_while(m_ch))
+            {
+                literal += read_while();
+                return new_token(Token::Type::TOKEN_WHILE, literal);
+            }
+            else if (is_if(m_ch))
+            {
+                literal += read_if();
+                return new_token(Token::Type::TOKEN_IF, literal);
+            }
+            std::string letter = read_letter();
+            unread_char(); // 让 m_ch 停留于letter的尾部
+            return new_token(Token::Type::TOKEN_LETTER, letter);
         }
         else
         {
             std::string literal;
             literal += m_ch;
-            return new_token(Token::TOKEN_ILLEGAL, literal);
+            return new_token(Token::Type::TOKEN_ILLEGAL, literal);
         }
     }
     }
@@ -121,10 +207,67 @@ void Lexer::unread_char()
     m_pos--;
 }
 
-bool Lexer::is_digit(char ch)
+constexpr bool Lexer::is_blank(char ch) const
 {
-    return (m_ch >= '0' && m_ch <= '9');
+    return ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r';
 }
+
+constexpr bool Lexer::is_digit(char ch) const
+{
+    return (ch >= '0' && ch <= '9');
+}
+
+constexpr bool Lexer::is_alpha(char ch) const
+{
+    return (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z');
+}
+
+constexpr bool Lexer::generic_compare(char ch, const std::string &str) const
+{
+    auto len = m_input.length();
+    auto s_len = str.length();
+    if (ch == str[0] && m_pos+s_len-1 < len && m_input.substr(m_pos, s_len) == str)
+    {
+        auto next_pos = m_pos + s_len;
+        if (next_pos >= len)
+        {
+            return is_blank(m_input[next_pos]);
+        }
+        return true;
+    }
+    return false;
+}
+
+constexpr bool Lexer::is_begin(char ch) const
+{
+    return generic_compare(ch, "begin");
+}
+
+constexpr bool Lexer::is_if(char ch) const
+{
+    return generic_compare(ch, "if");
+}
+
+constexpr bool Lexer::is_then(char ch) const
+{
+    return generic_compare(ch, "then");
+}
+
+constexpr bool Lexer::is_while(char ch) const
+{
+    return generic_compare(ch, "while");
+}
+
+constexpr bool Lexer::is_do(char ch) const
+{
+    return generic_compare(ch, "do");
+}
+
+constexpr bool Lexer::is_end(char ch) const
+{
+    return generic_compare(ch, "end");
+}
+
 
 std::string Lexer::read_number()
 {
@@ -136,7 +279,55 @@ std::string Lexer::read_number()
     return m_input.substr(pos, m_pos - pos);
 }
 
-Token Lexer::new_token(Token::Type type, const std::string& literal)
+std::string Lexer::read_letter()
+{
+    int pos = m_pos;
+    read_char();
+    while (is_digit(m_input[m_pos]) || m_input[m_pos] == '_' || is_alpha(m_input[m_pos]))
+    {
+        read_char();
+    }
+    return m_input.substr(pos, m_pos - pos);
+}
+
+std::string Lexer::generic_read(const std::string &str)
+{
+    m_pos += str.length();
+    m_next_pos = m_pos + 1;
+    return str;
+}
+
+std::string Lexer::read_begin()
+{
+    return generic_read("begin");
+}
+
+std::string Lexer::read_if()
+{
+    return generic_read("if");
+}
+
+std::string  Lexer::read_then()
+{
+    return generic_read("then");
+}
+
+std::string  Lexer::read_while()
+{
+    return generic_read("while");
+}
+
+std::string  Lexer::read_do()
+{
+    return generic_read("do");
+}
+
+std::string  Lexer::read_end()
+{
+    return generic_read("end");
+}
+
+Token Lexer::new_token(Token::Type type, const std::string& literal) const
 {
     Token token(type, literal);
     return token;

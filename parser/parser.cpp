@@ -4,10 +4,22 @@
 using namespace Ort::parser;
 
 std::map<Token::Type, int> Parser::m_precedences = {
-    {Token::TOKEN_PLUS, SUM},
-    {Token::TOKEN_MINUS, SUM},
-    {Token::TOKEN_ASTERISK, PRODUCT},
-    {Token::TOKEN_SLASH, PRODUCT},
+    {Token::Type::TOKEN_PLUS, SUM},
+    {Token::Type::TOKEN_MINUS, SUM},
+    {Token::Type::TOKEN_ASTERISK, PRODUCT},
+    {Token::Type::TOKEN_SLASH, PRODUCT},
+};
+
+std::map<Token::Type, Parser::prefix_parse_fn> Parser::m_prefix_parse_fns = {
+    {Token::Type::TOKEN_DIGIT, &Parser::parse_digit},
+    {Token::Type::TOKEN_LPAREN, &Parser::parse_group},
+};
+
+std::map<Token::Type, Parser::infix_parse_fn> Parser::m_infix_parse_fns = {
+    {Token::Type::TOKEN_PLUS, &Parser::parse_infix},
+    {Token::Type::TOKEN_MINUS, &Parser::parse_infix},
+    {Token::Type::TOKEN_ASTERISK, &Parser::parse_infix},
+    {Token::Type::TOKEN_SLASH, &Parser::parse_infix},
 };
 
 Parser::Parser() = default;
@@ -54,7 +66,7 @@ bool Parser::expect_peek_token(Token::Type type)
 void Parser::peek_error(Token::Type type)
 {
     std::ostringstream oss;
-    oss << "expected next token to be " << type << ", got " << m_peek.type() << " instead";
+    oss << "expected next token to be " << static_cast<int>(type) << ", got " << static_cast<int>(m_peek.type()) << " instead";
     m_errors.push_back(oss.str());
 }
 

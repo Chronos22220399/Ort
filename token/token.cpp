@@ -8,11 +8,35 @@
 using namespace Ort::token;
 
 std::map<Token::Type, std::string> Token::m_names = {
-    {TOKEN_ILLEGAL, "illegal"}, {TOKEN_EOF, "eof"},    {TOKEN_INTEGER, "integer"}, {TOKEN_PLUS, "+"},
-    {TOKEN_MINUS, "-"},         {TOKEN_ASTERISK, "*"}, {TOKEN_SLASH, "/"},         {TOKEN_LPAREN, "("},
-    {TOKEN_RPAREN, ")"},        {TOKEN_SEMICOLON, ";"}};
+    {Type::TOKEN_ILLEGAL, "illegal"}, // illegal
+    {Type::TOKEN_BEGIN, "begin"},     // begin
+    {Type::TOKEN_IF, "if"},           // if
+    {Type::TOKEN_THEN, "then"},       // then
+    {Type::TOKEN_WHILE, "while"},     // while
+    {Type::TOKEN_DO, "do"},           // do
+    {Type::TOKEN_END, "end"},         // end
+    {Type::TOKEN_LETTER, "letter"},   // letter
+    {Type::TOKEN_EOF, "eof"},         // eof
+    {Type::TOKEN_DIGIT, "integer"},   // integer
+    {Type::TOKEN_PLUS, "+"},          // +
+    {Type::TOKEN_MINUS, "-"},         // -
+    {Type::TOKEN_ASTERISK, "*"},      // *
+    {Type::TOKEN_SLASH, "/"},         // /
+    {Type::TOKEN_COLON, ":"},         // :
+    {Type::TOKEN_EQUAL, "="},         // =
+    {Type::TOKEN_LESS, "<"},          // <
+    {Type::TOKEN_NOTEQUAL, "!="},     // !=
+    {Type::TOKEN_LESSEQUAL, "<="},    // <=
+    {Type::TOKEN_GREATE, ">"},        // >
+    {Type::TOKEN_GREATEEQUAL, ">="},  // >=
+    {Type::TOKEN_EQUALEQUAL, "=="},   // ==
+    {Type::TOKEN_LPAREN, "("},        // (
+    {Type::TOKEN_RPAREN, ")"},        // )
+    {Type::TOKEN_SEMICOLON, ";"},     // ;
+    {Type::TOKEN_COMMA, "#"}          // #
+};
 
-Token::Token() : m_type(TOKEN_ILLEGAL)
+Token::Token() : m_type(Type::TOKEN_ILLEGAL)
 {
 }
 
@@ -52,7 +76,7 @@ Token& Token::operator=(const Token& other)
 
 void Token::show() const
 {
-    fmt::println("type= {}\tname= {}\tliteral={}", static_cast<int>(m_type), name(), m_literal);
+    fmt::println("type= {}\tname= {}\tliteral= {}", static_cast<int>(m_type), name(), m_literal);
 }
 
 nlohmann::json Token::json() const

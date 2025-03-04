@@ -1118,40 +1118,16 @@
 			"value" : "FALSE"
 		},
 		{
-			"name" : "Es_BINARY_DIR",
+			"name" : "FIND_PACKAGE_MESSAGE_DETAILS_nlohmann_json",
 			"properties" : 
 			[
 				{
 					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
+					"value" : "Details about finding nlohmann_json"
 				}
 			],
-			"type" : "STATIC",
-			"value" : "/Users/wuming/CLionProjects/Ort/cmake-build-debug"
-		},
-		{
-			"name" : "Es_IS_TOP_LEVEL",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "ON"
-		},
-		{
-			"name" : "Es_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/Users/wuming/CLionProjects/Ort"
+			"type" : "INTERNAL",
+			"value" : "[/opt/homebrew/share/cmake/nlohmann_json/nlohmann_jsonConfig.cmake][v3.11.3()]"
 		},
 		{
 			"name" : "Ort_BINARY_DIR",
@@ -1188,6 +1164,30 @@
 			],
 			"type" : "STATIC",
 			"value" : "/Users/wuming/CLionProjects/Ort"
+		},
+		{
+			"name" : "fmt_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for fmt."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/homebrew/lib/cmake/fmt"
+		},
+		{
+			"name" : "nlohmann_json_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for nlohmann_json."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/homebrew/share/cmake/nlohmann_json"
 		}
 	],
 	"kind" : "cache",

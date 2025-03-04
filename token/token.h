@@ -11,18 +11,34 @@ namespace token
 class Token
 {
 public:
-    enum Type
+    enum class Type
     {
-        TOKEN_ILLEGAL = 0, // illegal
-        TOKEN_EOF,         // eof
-        TOKEN_INTEGER,     // integer
-        TOKEN_PLUS,        // +
-        TOKEN_MINUS,       // -
-        TOKEN_ASTERISK,    // *
-        TOKEN_SLASH,       // /
-        TOKEN_LPAREN,      // (
-        TOKEN_RPAREN,      // )
-        TOKEN_SEMICOLON,   // ;
+        TOKEN_ILLEGAL = -1, // illegal
+        TOKEN_EOF,          // eof
+        TOKEN_BEGIN,        // begin
+        TOKEN_IF,           // if
+        TOKEN_THEN,         // then
+        TOKEN_WHILE,        // while
+        TOKEN_DO,           // do
+        TOKEN_END,          // end
+        TOKEN_LETTER,       // letter
+        TOKEN_DIGIT,        // digit
+        TOKEN_PLUS,         // +
+        TOKEN_MINUS,        // -
+        TOKEN_ASTERISK,     // *
+        TOKEN_SLASH,        // /
+        TOKEN_COLON,        // :
+        TOKEN_EQUAL,        // =
+        TOKEN_LESS,         // <
+        TOKEN_NOTEQUAL,     // !=
+        TOKEN_LESSEQUAL,    // <=
+        TOKEN_GREATE,       // >
+        TOKEN_GREATEEQUAL, // >=
+        TOKEN_EQUALEQUAL,   // ==
+        TOKEN_LPAREN,       // (
+        TOKEN_RPAREN,       // )
+        TOKEN_SEMICOLON,    // ;
+        TOKEN_COMMA,        // #
     };
 
     Token();
